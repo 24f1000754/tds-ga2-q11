@@ -12,15 +12,7 @@ import threading
 
 app = FastAPI()
 
-# Allow browser-based grader requests
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    expose_headers=["Retry-After"],
-)
+
 
 # Assigned values from the question
 TOTAL_ORDERS = 55
@@ -98,6 +90,17 @@ async def per_client_rate_limit(request: Request, call_next):
         client_buckets[client_id] = (start, count + 1)
 
     return await call_next(request)
+
+
+# Allow browser-based grader requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["Retry-After"],
+)
 
 
 @app.post("/orders", status_code=201)
